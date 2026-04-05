@@ -1,8 +1,8 @@
 package com.yocto.yoclib.imap.protocol;
 
-public class IMAPProtocolAtom extends IMAPProtocolString{
+public class ProtocolAtom extends ProtocolString {
 
-    public IMAPProtocolAtom(String value){
+    public ProtocolAtom(String value){
         super(value);
         // TODO: Add checks
     }
@@ -14,7 +14,7 @@ public class IMAPProtocolAtom extends IMAPProtocolString{
 
     @Override
     public String toString() {
-        return "IMAPProtocolAtom{" +
+        return "ProtocolAtom{" +
                 "value='" + value + '\'' +
                 '}';
     }

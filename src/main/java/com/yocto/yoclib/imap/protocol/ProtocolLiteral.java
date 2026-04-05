@@ -1,20 +1,20 @@
 package com.yocto.yoclib.imap.protocol;
 
-public class IMAPProtocolLiteral extends IMAPProtocolString{
+public class ProtocolLiteral extends ProtocolString {
 
     private final int length;
 
-    protected IMAPProtocolLiteral(int length,String value){
+    protected ProtocolLiteral(int length, String value){
         super(value);
         this.length = length;
         // TODO: Add checks
     }
 
-    public IMAPProtocolLiteral(int length){
+    public ProtocolLiteral(int length){
         this(length,null);
     }
 
-    public IMAPProtocolLiteral(String value){
+    public ProtocolLiteral(String value){
         this(value.length(),value);
     }
 
@@ -25,7 +25,7 @@ public class IMAPProtocolLiteral extends IMAPProtocolString{
 
     @Override
     public String toString() {
-        return "IMAPProtocolLiteral{" +
+        return "ProtocolLiteral{" +
                 "value='" + value + '\'' +
                 '}';
     }

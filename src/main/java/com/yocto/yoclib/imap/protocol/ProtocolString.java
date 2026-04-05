@@ -1,10 +1,10 @@
 package com.yocto.yoclib.imap.protocol;
 
-public abstract class IMAPProtocolString extends IMAPProtocolObject{
+public abstract class ProtocolString extends ProtocolObject {
 
     protected final String value;
 
-    protected IMAPProtocolString(String value){
+    protected ProtocolString(String value){
         this.value = value;
     }
 
@@ -17,7 +17,7 @@ public abstract class IMAPProtocolString extends IMAPProtocolObject{
 
     @Override
     public String toString() {
-        return "IMAPProtocolString{" +
+        return "ProtocolString{" +
                 "value='" + value + '\'' +
                 '}';
     }

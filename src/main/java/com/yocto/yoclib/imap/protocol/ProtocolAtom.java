@@ -7,6 +7,10 @@ public class ProtocolAtom extends ProtocolString {
         // TODO: Add checks
     }
 
+    public boolean isNIL(){
+        return "NIL".equals(this.value);
+    }
+
     @Override
     public String toProtocolString(){
         return this.value;

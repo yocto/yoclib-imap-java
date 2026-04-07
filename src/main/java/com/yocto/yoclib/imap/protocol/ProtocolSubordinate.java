@@ -3,11 +3,11 @@ package com.yocto.yoclib.imap.protocol;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class ProtocolList extends ProtocolObject {
+public class ProtocolSubordinate extends ProtocolObject {
 
     private final ProtocolObject[] value;
 
-    public ProtocolList(ProtocolObject[] value){
+    public ProtocolSubordinate(ProtocolObject[] value){
         this.value = value;
     }
 
@@ -17,12 +17,12 @@ public class ProtocolList extends ProtocolObject {
 
     @Override
     public String toProtocolString(){
-        return ProtocolConstants.PARENTHESIS_LEFT+Arrays.stream(this.value).map(ProtocolObject::toProtocolString).collect(Collectors.joining(Character.toString(ProtocolConstants.SPACE)))+ProtocolConstants.PARENTHESIS_RIGHT;
+        return ProtocolConstants.SQUARE_BRACKET_LEFT+Arrays.stream(this.value).map(ProtocolObject::toProtocolString).collect(Collectors.joining(Character.toString(ProtocolConstants.SPACE)))+ProtocolConstants.SQUARE_BRACKET_RIGHT;
     }
 
     @Override
     public String toString() {
-        return "ProtocolList{" +
+        return "ProtocolSubordinate{" +
                 "value=" + Arrays.toString(value) +
                 '}';
     }

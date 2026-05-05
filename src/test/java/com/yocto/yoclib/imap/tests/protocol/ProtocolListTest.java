@@ -15,9 +15,9 @@ public class ProtocolListTest {
         ProtocolQuoted ab = new ProtocolQuoted("ab");
         ProtocolLiteral abc = new ProtocolLiteral("abc");
 
-        assertArrayEquals(new ProtocolObject[]{a},new ProtocolList(new ProtocolObject[]{a}).getValue());
-        assertArrayEquals(new ProtocolObject[]{a,ab},new ProtocolList(new ProtocolObject[]{a,ab}).getValue());
-        assertArrayEquals(new ProtocolObject[]{a,ab,abc},new ProtocolList(new ProtocolObject[]{a,ab,abc}).getValue());
+        assertArrayEquals(new ProtocolObject[]{a},new ProtocolList(new ProtocolObject[]{a}).getObjects());
+        assertArrayEquals(new ProtocolObject[]{a,ab},new ProtocolList(new ProtocolObject[]{a,ab}).getObjects());
+        assertArrayEquals(new ProtocolObject[]{a,ab,abc},new ProtocolList(new ProtocolObject[]{a,ab,abc}).getObjects());
     }
 
     @Test

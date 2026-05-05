@@ -2,31 +2,31 @@ package com.yocto.yoclib.imap.protocol;
 
 public class ProtocolLiteral extends ProtocolString {
 
-    private final int length;
+    private final boolean isNonSynchronizing;
 
-    protected ProtocolLiteral(int length, String value){
+    protected ProtocolLiteral(String value,boolean isNonSynchronizing){
         super(value);
-        this.length = length;
+        this.isNonSynchronizing = isNonSynchronizing;
         // TODO: Add checks
     }
 
-    public ProtocolLiteral(int length){
-        this(length,null);
+    public ProtocolLiteral(String value){
+        this(value,false);
     }
 
-    public ProtocolLiteral(String value){
-        this(value.length(),value);
+    public boolean isNonSynchronizing(){
+        return this.isNonSynchronizing;
     }
 
     @Override
     public String toProtocolString() {
-        return "{"+this.length+"}\r\n"+this.value;
+        return ProtocolConstants.LITERAL_LEFT+(this.value.length()+(this.isNonSynchronizing?Character.toString(ProtocolConstants.PLUS):""))+ProtocolConstants.LITERAL_RIGHT+ProtocolConstants.CRLF+this.value;
     }
 
     @Override
     public String toString() {
         return "ProtocolLiteral{" +
-                "value='" + value + '\'' +
+                "value='" + this.value + '\'' +
                 '}';
     }
 

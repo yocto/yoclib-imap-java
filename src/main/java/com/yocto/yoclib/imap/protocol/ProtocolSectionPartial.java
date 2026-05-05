@@ -4,36 +4,36 @@ public class ProtocolSectionPartial extends ProtocolObject{
 
     private final ProtocolAtom atom;
     private final ProtocolSubordinate subordinate;
-    private final Integer offset;
-    private final Integer length;
+    private final Integer partialOffset;
+    private final Integer partialLength;
 
-    public ProtocolSectionPartial(ProtocolAtom atom,ProtocolSubordinate subordinate,Integer offset,Integer length){
-        if(atom==null){
-            throw new RuntimeException("Atom cannot be null.");
-        }
-        if(offset!=null && length==null){
-            throw new RuntimeException("Length cannot be null.");
-        }
+    public ProtocolSectionPartial(ProtocolAtom atom,ProtocolSubordinate subordinate,Integer partialOffset,Integer partialLength){
         this.atom = atom;
         this.subordinate = subordinate;
-        this.offset = offset;
-        this.length = length;
+        this.partialOffset = partialOffset;
+        this.partialLength = partialLength;
+        if(this.atom==null){
+            throw new RuntimeException("Atom cannot be null.");
+        }
+        if(this.partialOffset!=null && this.partialLength==null){
+            throw new RuntimeException("Length cannot be null.");
+        }
     }
 
-    public ProtocolSectionPartial(ProtocolAtom atom,ProtocolSubordinate subordinate,Integer length){
-        this(atom,subordinate,null,length);
+    public ProtocolSectionPartial(ProtocolAtom atom,ProtocolSubordinate subordinate,Integer partialOffset){
+        this(atom,subordinate,partialOffset,null);
     }
 
     public ProtocolSectionPartial(ProtocolAtom atom,ProtocolSubordinate subordinate){
         this(atom,subordinate,null,null);
     }
 
-    public ProtocolSectionPartial(ProtocolAtom atom,Integer offset,Integer length){
-        this(atom,null,offset,length);
+    public ProtocolSectionPartial(ProtocolAtom atom,Integer partialOffset,Integer partialLength){
+        this(atom,null,partialOffset,partialLength);
     }
 
-    public ProtocolSectionPartial(ProtocolAtom atom,Integer length){
-        this(atom,null,null,length);
+    public ProtocolSectionPartial(ProtocolAtom atom,Integer partialOffset){
+        this(atom,null,partialOffset,null);
     }
 
     public ProtocolSectionPartial(ProtocolAtom atom){
@@ -48,27 +48,31 @@ public class ProtocolSectionPartial extends ProtocolObject{
         return this.subordinate;
     }
 
-    public Integer getOffset() {
-        return this.offset;
+    public Integer getPartialOffset() {
+        return this.partialOffset;
     }
 
-    public Integer getLength() {
-        return this.length;
-    }
-
-    private String partialToProtocolString(){
-        if(this.length!=null){
-            if(this.offset!=null){
-                return "<"+this.offset+"."+this.length+">";
-            }
-            return "<"+this.length+">";
-        }
-        return "";
+    public Integer getPartialLength() {
+        return this.partialLength;
     }
 
     @Override
-    public String toProtocolString(){
-        return this.atom.toProtocolString()+this.subordinate.toProtocolString()+this.partialToProtocolString();
+    public String toProtocolString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.atom.toProtocolString());
+        if(this.subordinate!=null){
+            sb.append(this.subordinate.toProtocolString());
+        }
+        if(this.partialOffset!=null){
+            sb.append("<");
+            sb.append(this.partialOffset);
+            if(this.partialLength!=null){
+                sb.append(".");
+                sb.append(this.partialLength);
+            }
+            sb.append(">");
+        }
+        return sb.toString();
     }
 
     @Override
@@ -76,8 +80,8 @@ public class ProtocolSectionPartial extends ProtocolObject{
         return "ProtocolSectionPartial{" +
                 "atom=" + atom +
                 ", subordinate=" + subordinate +
-                ", offset=" + offset +
-                ", length=" + length +
+                ", partialOffset=" + partialOffset +
+                ", partialLength=" + partialLength +
                 '}';
     }
 

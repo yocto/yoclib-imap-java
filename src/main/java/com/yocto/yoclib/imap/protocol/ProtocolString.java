@@ -13,13 +13,24 @@ public abstract class ProtocolString extends ProtocolObject {
     }
 
     @Override
-    public abstract String toProtocolString();
-
-    @Override
     public String toString() {
         return "ProtocolString{" +
-                "value='" + value + '\'' +
+                "value='" + this.value + '\'' +
                 '}';
+    }
+
+    public static ProtocolString create(String string){
+        return ProtocolString.create(string,false);
+    }
+
+    public static ProtocolString create(String string,boolean forceQuoted){
+        if(string.contains("\r") || string.contains("\n")){
+            return new ProtocolLiteral(string);
+        }
+        if(string.contains(" ") || string.contains("\t") || string.isEmpty() || forceQuoted){
+            return new ProtocolQuoted(string);
+        }
+        return new ProtocolAtom(string);
     }
 
 }

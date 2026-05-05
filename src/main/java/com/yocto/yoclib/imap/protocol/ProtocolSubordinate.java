@@ -5,25 +5,25 @@ import java.util.stream.Collectors;
 
 public class ProtocolSubordinate extends ProtocolObject {
 
-    private final ProtocolObject[] value;
+    private final ProtocolObject[] objects;
 
-    public ProtocolSubordinate(ProtocolObject[] value){
-        this.value = value;
+    public ProtocolSubordinate(ProtocolObject[] objects){
+        this.objects = objects;
     }
 
-    public ProtocolObject[] getValue() {
-        return this.value;
+    public ProtocolObject[] getObjects(){
+        return this.objects;
     }
 
     @Override
     public String toProtocolString(){
-        return ProtocolConstants.SQUARE_BRACKET_LEFT+Arrays.stream(this.value).map(ProtocolObject::toProtocolString).collect(Collectors.joining(Character.toString(ProtocolConstants.SPACE)))+ProtocolConstants.SQUARE_BRACKET_RIGHT;
+        return ProtocolConstants.SQUARE_BRACKET_LEFT+ProtocolObject.joinObjects(this.objects)+ProtocolConstants.SQUARE_BRACKET_RIGHT;
     }
 
     @Override
     public String toString() {
         return "ProtocolSubordinate{" +
-                "value=" + Arrays.toString(value) +
+                "objects=" + Arrays.toString(this.objects) +
                 '}';
     }
 

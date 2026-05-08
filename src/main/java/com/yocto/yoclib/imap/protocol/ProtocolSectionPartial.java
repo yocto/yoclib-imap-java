@@ -15,8 +15,8 @@ public class ProtocolSectionPartial extends ProtocolObject{
         if(this.atom==null){
             throw new RuntimeException("Atom cannot be null.");
         }
-        if(this.partialOffset!=null && this.partialLength==null){
-            throw new RuntimeException("Length cannot be null.");
+        if(this.partialOffset==null && this.partialLength!=null){
+            throw new RuntimeException("Offset cannot be null.");
         }
     }
 

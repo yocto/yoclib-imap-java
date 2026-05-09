@@ -42,6 +42,13 @@ public class ProtocolSectionPartial extends ProtocolObject{
         this(atom,null,null,null);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ProtocolSectionPartial)) return false;
+        ProtocolSectionPartial that = (ProtocolSectionPartial) o;
+        return Objects.equals(this.atom, that.atom) && Objects.equals(this.subordinate, that.subordinate) && Objects.equals(this.partialOffset, that.partialOffset) && Objects.equals(this.partialLength, that.partialLength);
+    }
+
     public ProtocolAtom getAtom() {
         return this.atom;
     }
@@ -56,13 +63,6 @@ public class ProtocolSectionPartial extends ProtocolObject{
 
     public Integer getPartialLength() {
         return this.partialLength;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof ProtocolSectionPartial)) return false;
-        ProtocolSectionPartial that = (ProtocolSectionPartial) o;
-        return Objects.equals(this.atom, that.atom) && Objects.equals(this.subordinate, that.subordinate) && Objects.equals(this.partialOffset, that.partialOffset) && Objects.equals(this.partialLength, that.partialLength);
     }
 
     @Override

@@ -16,31 +16,31 @@ public class ProtocolParserTest{
 	public void testParsingBinaryLiteral(){
 		assertArrayEquals(new ProtocolObject[]{
 				new ProtocolAtom("~"),
-		},ProtocolParser.parse("~\r\n"));
+		},ProtocolParser.parse("~\r\n".getBytes()));
 
 		assertArrayEquals(new ProtocolObject[]{
 				new ProtocolAtom("~/Mail/foo"),
-		},ProtocolParser.parse("~/Mail/foo\r\n"));
+		},ProtocolParser.parse("~/Mail/foo\r\n".getBytes()));
 
 		assertArrayEquals(new ProtocolObject[]{
 				new ProtocolBinaryLiteral(""),
 				new ProtocolAtom("abc"),
-		},ProtocolParser.parse("~{0}\r\n abc\r\n"));
+		},ProtocolParser.parse("~{0}\r\n abc\r\n".getBytes()));
 
 		assertArrayEquals(new ProtocolObject[]{
 				new ProtocolBinaryLiteral("def"),
 				new ProtocolAtom("abc"),
-		},ProtocolParser.parse("~{3}\r\ndef abc\r\n"));
+		},ProtocolParser.parse("~{3}\r\ndef abc\r\n".getBytes()));
 
 		assertArrayEquals(new ProtocolObject[]{
 				new ProtocolBinaryLiteral("",true),
 				new ProtocolAtom("abc"),
-		},ProtocolParser.parse("~{0+}\r\n abc\r\n"));
+		},ProtocolParser.parse("~{0+}\r\n abc\r\n".getBytes()));
 
 		assertArrayEquals(new ProtocolObject[]{
 				new ProtocolBinaryLiteral("def",true),
 				new ProtocolAtom("abc"),
-		},ProtocolParser.parse("~{3+}\r\ndef abc\r\n"));
+		},ProtocolParser.parse("~{3+}\r\ndef abc\r\n".getBytes()));
 	}
 
 	@Test
@@ -48,22 +48,22 @@ public class ProtocolParserTest{
 		assertArrayEquals(new ProtocolObject[]{
 				new ProtocolLiteral(""),
 				new ProtocolAtom("abc"),
-		},ProtocolParser.parse("{0}\r\n abc\r\n"));
+		},ProtocolParser.parse("{0}\r\n abc\r\n".getBytes()));
 
 		assertArrayEquals(new ProtocolObject[]{
 				new ProtocolLiteral("def"),
 				new ProtocolAtom("abc"),
-		},ProtocolParser.parse("{3}\r\ndef abc\r\n"));
+		},ProtocolParser.parse("{3}\r\ndef abc\r\n".getBytes()));
 
 		assertArrayEquals(new ProtocolObject[]{
 				new ProtocolLiteral("",true),
 				new ProtocolAtom("abc"),
-		},ProtocolParser.parse("{0+}\r\n abc\r\n"));
+		},ProtocolParser.parse("{0+}\r\n abc\r\n".getBytes()));
 
 		assertArrayEquals(new ProtocolObject[]{
 				new ProtocolLiteral("def",true),
 				new ProtocolAtom("abc"),
-		},ProtocolParser.parse("{3+}\r\ndef abc\r\n"));
+		},ProtocolParser.parse("{3+}\r\ndef abc\r\n".getBytes()));
 	}
 
 	@Test

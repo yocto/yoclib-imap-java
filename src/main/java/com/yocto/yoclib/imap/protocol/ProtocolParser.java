@@ -6,8 +6,8 @@ import java.util.List;
 
 public final class ProtocolParser {
 
-    public static ProtocolObject[] parse(String input) {
-        if (input == null || input.trim().isEmpty()) {
+    public static ProtocolObject[] parse(byte[] input) {
+        if (input == null || input.length == 0) {
             return new ProtocolObject[0];
         }
 
@@ -27,28 +27,29 @@ public final class ProtocolParser {
         t.skipWhitespace();
         if (!t.hasMore()) return null;
 
-        char c = t.peekCharNoSkip();
+        byte b = t.peekByteNoSkip();
 
-        // Binary literal: ~{n} or ~{n+}   ← Only if ~ is immediately followed by {
-        if (c == '~' && t.isNextCharAfter('~', '{')) {
-            t.consumeNoSkip('~');
+        // Binary literal: ~{n} or ~{n+}
+        if (b == '~' && t.isNextByteAfter((byte) '~', (byte) '{')) {
+            t.consumeNoSkip((byte) '~');
             return parseBinaryLiteral(t);
         }
 
         // Regular literal: {n} or {n+}
-        if (c == '{') {
+        if (b == '{') {
             return parseRegularLiteral(t);
         }
 
-        if (c == '(') return parseList(t);
-        if (c == '[') return parseSubordinate(t);
-        if (c == '"') return parseQuoted(t);
+        if (b == '(') return parseList(t);
+        if (b == '[') return parseSubordinate(t);
+        if (b == '"') return parseQuoted(t);
 
-        // Atom (includes lone "~", etc.)
+        // Atom
         String atomValue = t.readAtom();
         ProtocolAtom atom = new ProtocolAtom(atomValue);
 
-        if (t.hasMore() && (t.isNextCharImmediate('[') || t.isNextCharImmediate('<'))) {
+        if (t.hasMore() &&
+                (t.isNextByteImmediate((byte) '[') || t.isNextByteImmediate((byte) '<'))) {
             return parseSectionPartial(atom, t);
         }
 
@@ -58,41 +59,40 @@ public final class ProtocolParser {
     // ====================== Literal Parsers ======================
 
     private static ProtocolLiteral parseRegularLiteral(Tokenizer t) {
-        LiteralHeader header = parseLiteralHeader(t, false);
+        LiteralHeader header = parseLiteralHeader(t);
         t.skipCRLF();
-        String data = t.readExactly(header.size);
-        return new ProtocolLiteral(data, header.nonSynchronizing);
+        byte[] data = t.readExactly(header.size);
+        return new ProtocolLiteral(new String(data, StandardCharsets.ISO_8859_1), header.nonSynchronizing);
     }
 
     private static ProtocolBinaryLiteral parseBinaryLiteral(Tokenizer t) {
-        LiteralHeader header = parseLiteralHeader(t, true);
+        LiteralHeader header = parseLiteralHeader(t);
         t.skipCRLF();
-        String rawData = t.readExactly(header.size);
-        byte[] binaryData = rawData.getBytes(StandardCharsets.ISO_8859_1);
-        return new ProtocolBinaryLiteral(binaryData, header.nonSynchronizing);
+        byte[] data = t.readExactly(header.size);
+        return new ProtocolBinaryLiteral(data, header.nonSynchronizing);
     }
 
-    private static LiteralHeader parseLiteralHeader(Tokenizer t, boolean isBinary) {
-        t.consumeNoSkip('{');
+    private static LiteralHeader parseLiteralHeader(Tokenizer t) {
+        t.consumeNoSkip((byte) '{');
 
         StringBuilder sizeStr = new StringBuilder();
         boolean nonSynchronizing = false;
 
         while (t.hasMore()) {
-            char c = t.peekCharNoSkip();
-            if (Character.isDigit(c)) {
-                sizeStr.append(t.nextCharNoSkip());
-            } else if (c == '+') {
+            byte b = t.peekByteNoSkip();
+            if (b >= '0' && b <= '9') {
+                sizeStr.append((char) t.nextByteNoSkip());
+            } else if (b == '+') {
                 nonSynchronizing = true;
-                t.consumeNoSkip('+');
-            } else if (c == '}') {
+                t.consumeNoSkip((byte) '+');
+            } else if (b == '}') {
                 break;
             } else {
                 break;
             }
         }
 
-        t.consumeNoSkip('}');
+        t.consumeNoSkip((byte) '}');
 
         int size = 0;
         try {
@@ -107,12 +107,12 @@ public final class ProtocolParser {
     // ====================== Other Parsers ======================
 
     private static ProtocolList parseList(Tokenizer t) {
-        t.consume('(');
+        t.consume((byte) '(');
         List<ProtocolObject> elements = new ArrayList<>();
         while (t.hasMore()) {
             t.skipWhitespace();
-            if (t.peekChar() == ')') {
-                t.consume(')');
+            if (t.peekByte() == ')') {
+                t.consume((byte) ')');
                 break;
             }
             elements.add(parseToken(t));
@@ -121,12 +121,12 @@ public final class ProtocolParser {
     }
 
     private static ProtocolSubordinate parseSubordinate(Tokenizer t) {
-        t.consume('[');
+        t.consume((byte) '[');
         List<ProtocolObject> elements = new ArrayList<>();
         while (t.hasMore()) {
             t.skipWhitespace();
-            if (t.peekChar() == ']') {
-                t.consume(']');
+            if (t.peekByte() == ']') {
+                t.consume((byte) ']');
                 break;
             }
             elements.add(parseToken(t));
@@ -139,11 +139,11 @@ public final class ProtocolParser {
         Integer offset = null;
         Integer length = null;
 
-        if (t.isNextCharImmediate('[')) {
+        if (t.isNextByteImmediate((byte) '[')) {
             section = parseSubordinate(t);
         }
 
-        if (t.hasMore() && t.isNextCharImmediate('<')) {
+        if (t.hasMore() && t.isNextByteImmediate((byte) '<')) {
             PartialData pd = parsePartialData(t);
             offset = pd.offset;
             length = pd.length;
@@ -153,16 +153,16 @@ public final class ProtocolParser {
     }
 
     private static PartialData parsePartialData(Tokenizer t) {
-        t.consumeNoSkip('<');
+        t.consumeNoSkip((byte) '<');
         StringBuilder sb = new StringBuilder();
 
         while (t.hasMore()) {
-            char c = t.nextCharNoSkip();
-            if (c == '>') {
-                t.consumeNoSkip('>');
+            byte b = t.nextByteNoSkip();
+            if (b == '>') {
+                t.consumeNoSkip((byte) '>');
                 break;
             }
-            sb.append(c);
+            sb.append((char) b);
         }
 
         String content = sb.toString().trim();
@@ -188,13 +188,15 @@ public final class ProtocolParser {
     }
 
     private static ProtocolQuoted parseQuoted(Tokenizer t) {
-        t.consumeNoSkip('"');
+        t.consumeNoSkip((byte) '"');
 
         StringBuilder sb = new StringBuilder();
         boolean escaped = false;
 
-        while (t.pos < t.input.length()) {
-            char c = t.input.charAt(t.pos++);
+        while (t.hasMore()) {
+            byte b = t.nextByteNoSkip();
+            char c = (char) b;
+
             if (escaped) {
                 sb.append(c);
                 escaped = false;
@@ -212,82 +214,83 @@ public final class ProtocolParser {
     // ====================== Tokenizer ======================
 
     private static class Tokenizer {
-        final String input;
+        final byte[] input;
         int pos = 0;
 
-        Tokenizer(String input) {
+        Tokenizer(byte[] input) {
             this.input = input;
         }
 
         public boolean hasMore() {
             skipWhitespace();
-            return pos < input.length();
+            return pos < input.length;
         }
 
         public void skipWhitespace() {
-            while (pos < input.length() && Character.isWhitespace(input.charAt(pos))) {
+            while (pos < input.length && Character.isWhitespace(input[pos] & 0xFF)) {
                 pos++;
             }
         }
 
         public void skipCRLF() {
-            if (pos < input.length() && input.charAt(pos) == '\r') pos++;
-            if (pos < input.length() && input.charAt(pos) == '\n') pos++;
+            if (pos < input.length && input[pos] == '\r') pos++;
+            if (pos < input.length && input[pos] == '\n') pos++;
         }
 
-        public char peekChar() {
+        public byte peekByte() {
             skipWhitespace();
-            return pos < input.length() ? input.charAt(pos) : '\0';
+            return pos < input.length ? input[pos] : 0;
         }
 
-        public char peekCharNoSkip() {
-            return pos < input.length() ? input.charAt(pos) : '\0';
+        public byte peekByteNoSkip() {
+            return pos < input.length ? input[pos] : 0;
         }
 
-        public boolean isNextCharImmediate(char expected) {
-            return pos < input.length() && input.charAt(pos) == expected;
+        public boolean isNextByteImmediate(byte expected) {
+            return pos < input.length && input[pos] == expected;
         }
 
-        public boolean isNextCharAfter(char current, char expected) {
-            if (pos >= input.length() || input.charAt(pos) != current) {
+        public boolean isNextByteAfter(byte current, byte expected) {
+            if (pos >= input.length || input[pos] != current) {
                 return false;
             }
-            return pos + 1 < input.length() && input.charAt(pos + 1) == expected;
+            return pos + 1 < input.length && input[pos + 1] == expected;
         }
 
         public String readAtom() {
             skipWhitespace();
             int start = pos;
-            while (pos < input.length()) {
-                char c = input.charAt(pos);
-                if (Character.isWhitespace(c) || c == '(' || c == ')' || c == '[' || c == ']' ||
-                        c == '"' || c == '{' || c == '}' || c == '<' || c == '>') {
+            while (pos < input.length) {
+                byte b = input[pos];
+                if (Character.isWhitespace(b & 0xFF) || b == '(' || b == ')' || b == '[' || b == ']' ||
+                        b == '"' || b == '{' || b == '}' || b == '<' || b == '>') {
                     break;
                 }
                 pos++;
             }
-            return input.substring(start, pos);
+            return new String(input, start, pos - start, StandardCharsets.US_ASCII);
         }
 
-        public String readExactly(int count) {
-            if (count <= 0) return "";
-            int toRead = Math.min(count, input.length() - pos);
-            String data = input.substring(pos, pos + toRead);
+        public byte[] readExactly(int count) {
+            if (count <= 0) return new byte[0];
+            int toRead = Math.min(count, input.length - pos);
+            byte[] data = new byte[toRead];
+            System.arraycopy(input, pos, data, 0, toRead);
             pos += toRead;
             return data;
         }
 
-        public void consume(char expected) {
+        public void consume(byte expected) {
             skipWhitespace();
-            if (pos < input.length() && input.charAt(pos) == expected) pos++;
+            if (pos < input.length && input[pos] == expected) pos++;
         }
 
-        public void consumeNoSkip(char expected) {
-            if (pos < input.length() && input.charAt(pos) == expected) pos++;
+        public void consumeNoSkip(byte expected) {
+            if (pos < input.length && input[pos] == expected) pos++;
         }
 
-        public char nextCharNoSkip() {
-            return pos < input.length() ? input.charAt(pos++) : '\0';
+        public byte nextByteNoSkip() {
+            return pos < input.length ? input[pos++] : 0;
         }
     }
 

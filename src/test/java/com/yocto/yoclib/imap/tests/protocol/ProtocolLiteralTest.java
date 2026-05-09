@@ -6,9 +6,26 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ProtocolLiteralTest {
+
+    @Test
+    public void testEquals(){
+        assertEquals(new ProtocolLiteral("a"),new ProtocolLiteral("a"));
+        assertEquals(new ProtocolLiteral("ab"),new ProtocolLiteral("ab"));
+        assertEquals(new ProtocolLiteral("abc"),new ProtocolLiteral("abc"));
+        assertEquals(new ProtocolLiteral("a",true),new ProtocolLiteral("a",true));
+        assertEquals(new ProtocolLiteral("ab",true),new ProtocolLiteral("ab",true));
+        assertEquals(new ProtocolLiteral("abc",true),new ProtocolLiteral("abc",true));
+
+        assertNotEquals(new ProtocolLiteral("a"),null);
+        assertNotEquals(null,new ProtocolLiteral("a"));
+
+        assertNotEquals(new ProtocolLiteral("ab"),"ab");
+        assertNotEquals("ab",new ProtocolLiteral("ab"));
+    }
 
     @Test
     public void testGetValue(){

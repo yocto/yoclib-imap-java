@@ -10,8 +10,26 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class ProtocolSubordinateTest {
+
+    @Test
+    public void testEquals(){
+        ProtocolAtom a = new ProtocolAtom("a");
+        ProtocolQuoted ab = new ProtocolQuoted("ab");
+        ProtocolLiteral abc = new ProtocolLiteral("abc");
+
+        assertEquals(new ProtocolSubordinate(new ProtocolObject[]{a}),new ProtocolSubordinate(new ProtocolObject[]{a}));
+        assertEquals(new ProtocolSubordinate(new ProtocolObject[]{a,ab}),new ProtocolSubordinate(new ProtocolObject[]{a,ab}));
+        assertEquals(new ProtocolSubordinate(new ProtocolObject[]{a,ab,abc}),new ProtocolSubordinate(new ProtocolObject[]{a,ab,abc}));
+
+        assertNotEquals(new ProtocolSubordinate(new ProtocolObject[]{a}),null);
+        assertNotEquals(null,new ProtocolSubordinate(new ProtocolObject[]{a}));
+
+        assertNotEquals(new ProtocolSubordinate(new ProtocolObject[]{a,ab}),new ProtocolObject[]{a,ab});
+        assertNotEquals(new ProtocolObject[]{a,ab},new ProtocolSubordinate(new ProtocolObject[]{a,ab}));
+    }
 
     @Test
     public void testGetValue(){

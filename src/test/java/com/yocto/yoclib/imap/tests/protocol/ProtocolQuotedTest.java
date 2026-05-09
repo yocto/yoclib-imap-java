@@ -5,8 +5,22 @@ import com.yocto.yoclib.imap.protocol.ProtocolQuoted;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class ProtocolQuotedTest {
+
+    @Test
+    public void testEquals(){
+        assertEquals(new ProtocolQuoted("a"),new ProtocolQuoted("a"));
+        assertEquals(new ProtocolQuoted("ab"),new ProtocolQuoted("ab"));
+        assertEquals(new ProtocolQuoted("abc"),new ProtocolQuoted("abc"));
+
+        assertNotEquals(new ProtocolQuoted("a"),null);
+        assertNotEquals(null,new ProtocolQuoted("a"));
+
+        assertNotEquals(new ProtocolQuoted("ab"),"ab");
+        assertNotEquals("ab",new ProtocolQuoted("ab"));
+    }
 
     @Test
     public void testGetValue(){

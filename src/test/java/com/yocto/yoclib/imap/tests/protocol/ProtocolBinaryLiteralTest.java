@@ -7,9 +7,26 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ProtocolBinaryLiteralTest {
+
+    @Test
+    public void testEquals(){
+        assertEquals(new ProtocolBinaryLiteral("\u0000a\u0000"),new ProtocolBinaryLiteral("\u0000a\u0000"));
+        assertEquals(new ProtocolBinaryLiteral("\u0000ab\u0000"),new ProtocolBinaryLiteral("\u0000ab\u0000"));
+        assertEquals(new ProtocolBinaryLiteral("\u0000abc\u0000"),new ProtocolBinaryLiteral("\u0000abc\u0000"));
+        assertEquals(new ProtocolBinaryLiteral("\u0000a\u0000",true),new ProtocolBinaryLiteral("\u0000a\u0000",true));
+        assertEquals(new ProtocolBinaryLiteral("\u0000ab\u0000",true),new ProtocolBinaryLiteral("\u0000ab\u0000",true));
+        assertEquals(new ProtocolBinaryLiteral("\u0000abc\u0000",true),new ProtocolBinaryLiteral("\u0000abc\u0000",true));
+
+        assertNotEquals(new ProtocolBinaryLiteral("\u0000a\u0000"),null);
+        assertNotEquals(null,new ProtocolBinaryLiteral("\u0000a\u0000"));
+
+        assertNotEquals(new ProtocolBinaryLiteral("\u0000ab\u0000"),"\u0000ab\u0000");
+        assertNotEquals("\u0000ab\u0000",new ProtocolBinaryLiteral("\u0000ab\u0000"));
+    }
 
     @Test
     public void testGetValue(){

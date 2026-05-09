@@ -9,8 +9,72 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class ProtocolStringTest {
+
+    @Test
+    public void testEquals(){
+        assertEquals(new ProtocolString("a") {
+            @Override
+            public String toProtocolString() {
+                return null;
+            }
+        }, new ProtocolString("a"){
+            @Override
+            public String toProtocolString() {
+                return null;
+            }
+        });
+        assertEquals(new ProtocolString("ab"){
+            @Override
+            public String toProtocolString() {
+                return null;
+            }
+        },new ProtocolString("ab"){
+            @Override
+            public String toProtocolString() {
+                return null;
+            }
+        });
+        assertEquals(new ProtocolString("abc"){
+            @Override
+            public String toProtocolString() {
+                return null;
+            }
+        },new ProtocolString("abc"){
+            @Override
+            public String toProtocolString() {
+                return null;
+            }
+        });
+
+        assertNotEquals(new ProtocolString("a"){
+            @Override
+            public String toProtocolString() {
+                return null;
+            }
+        },null);
+        assertNotEquals(null,new ProtocolString("a"){
+            @Override
+            public String toProtocolString() {
+                return null;
+            }
+        });
+
+        assertNotEquals(new ProtocolString("ab"){
+            @Override
+            public String toProtocolString() {
+                return null;
+            }
+        },"ab");
+        assertNotEquals("ab",new ProtocolString("ab"){
+            @Override
+            public String toProtocolString() {
+                return null;
+            }
+        });
+    }
 
     @Test
     public void testToString(){

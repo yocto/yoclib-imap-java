@@ -10,8 +10,26 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class ProtocolListTest {
+
+    @Test
+    public void testEquals(){
+        ProtocolAtom a = new ProtocolAtom("a");
+        ProtocolQuoted ab = new ProtocolQuoted("ab");
+        ProtocolLiteral abc = new ProtocolLiteral("abc");
+
+        assertEquals(new ProtocolList(new ProtocolObject[]{a}),new ProtocolList(new ProtocolObject[]{a}));
+        assertEquals(new ProtocolList(new ProtocolObject[]{a,ab}),new ProtocolList(new ProtocolObject[]{a,ab}));
+        assertEquals(new ProtocolList(new ProtocolObject[]{a,ab,abc}),new ProtocolList(new ProtocolObject[]{a,ab,abc}));
+
+        assertNotEquals(new ProtocolList(new ProtocolObject[]{a}),null);
+        assertNotEquals(null,new ProtocolList(new ProtocolObject[]{a}));
+
+        assertNotEquals(new ProtocolList(new ProtocolObject[]{a,ab}),new ProtocolObject[]{a,ab});
+        assertNotEquals(new ProtocolObject[]{a,ab},new ProtocolList(new ProtocolObject[]{a,ab}));
+    }
 
     @Test
     public void testGetValue(){

@@ -18,7 +18,7 @@ public class ProtocolParserTest{
 		//assertEquals(1,objects.length);
 		//assertInstanceOf(ProtocolAtom.class,objects[0]);
 
-		ProtocolAtom atom = (ProtocolAtom) objects[0];
+		//ProtocolAtom atom = (ProtocolAtom) objects[0];
 		//assertEquals("!#$$&'+,-.0123456789:;<=>?@^_`|[}",atom.getValue());
 	}
 

@@ -14,6 +14,8 @@ public final class ProtocolConstants {
 
     public static final char SPACE = ' ';
 
+    public static final char TILDE = '~';
+
     public static final char LITERAL_LEFT = '{';
     public static final char LITERAL_RIGHT = '}';
 

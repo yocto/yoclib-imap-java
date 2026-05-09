@@ -39,9 +39,9 @@ public class ProtocolLiteralTest {
 
     @Test
     public void testToString(){
-        assertEquals("ProtocolLiteral{value='a'}",new ProtocolLiteral("a").toString());
-        assertEquals("ProtocolLiteral{value='ab'}",new ProtocolLiteral("ab").toString());
-        assertEquals("ProtocolLiteral{value='abc'}",new ProtocolLiteral("abc").toString());
+        assertEquals("ProtocolLiteral{isNonSynchronizing=false, value='a'}",new ProtocolLiteral("a").toString());
+        assertEquals("ProtocolLiteral{isNonSynchronizing=false, value='ab'}",new ProtocolLiteral("ab").toString());
+        assertEquals("ProtocolLiteral{isNonSynchronizing=false, value='abc'}",new ProtocolLiteral("abc").toString());
     }
 
 }

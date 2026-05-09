@@ -26,7 +26,8 @@ public class ProtocolLiteral extends ProtocolString {
     @Override
     public String toString() {
         return "ProtocolLiteral{" +
-                "value='" + this.value + '\'' +
+                "isNonSynchronizing=" + isNonSynchronizing +
+                ", value='" + value + '\'' +
                 '}';
     }
 

@@ -1,9 +1,10 @@
 package com.yocto.yoclib.imap.protocol;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProtocolParser{
+public class ProtocolParser {
 
     public static ProtocolObject[] parse(String input) {
         if (input == null || input.trim().isEmpty()) {
@@ -26,17 +27,27 @@ public class ProtocolParser{
         t.skipWhitespace();
         if (!t.hasMore()) return null;
 
-        char c = t.peekChar();
+        char c = t.peekCharNoSkip();
+
+        // Binary literal: ~{n} or ~{n+}
+        if (c == '~') {
+            t.consumeNoSkip('~');
+            return parseBinaryLiteral(t);
+        }
+
+        // Regular literal: {n} or {n+}
+        if (c == '{') {
+            return parseRegularLiteral(t);
+        }
 
         if (c == '(') return parseList(t);
         if (c == '[') return parseSubordinate(t);
-        if (c == '{') return parseLiteral(t);
-        if (c == '"') return parseQuoted(t);   // quoted string
+        if (c == '"') return parseQuoted(t);
 
+        // Atom
         String atomValue = t.readAtom();
         ProtocolAtom atom = new ProtocolAtom(atomValue);
 
-        // Strict SectionPartial: no whitespace between atom and [ or <
         if (t.hasMore() && (t.isNextCharImmediate('[') || t.isNextCharImmediate('<'))) {
             return parseSectionPartial(atom, t);
         }
@@ -44,7 +55,99 @@ public class ProtocolParser{
         return atom;
     }
 
-    private static ProtocolObject parseSectionPartial(ProtocolAtom baseAtom, Tokenizer t) {
+    // ====================== Split Literal Parsers ======================
+
+    /**
+     * Parses regular literals: {n} or {n+}
+     */
+    private static ProtocolLiteral parseRegularLiteral(Tokenizer t) {
+        LiteralHeader header = parseLiteralHeader(t, false);
+        t.skipCRLF();
+
+        String data = t.readExactly(header.size);
+        return new ProtocolLiteral(data, header.nonSynchronizing);
+    }
+
+    /**
+     * Parses binary literals: ~{n} or ~{n+}
+     */
+    private static ProtocolBinaryLiteral parseBinaryLiteral(Tokenizer t) {
+        LiteralHeader header = parseLiteralHeader(t, true);
+        t.skipCRLF();
+
+        String rawData = t.readExactly(header.size);
+        byte[] binaryData = rawData.getBytes(StandardCharsets.ISO_8859_1);
+
+        return new ProtocolBinaryLiteral(binaryData, header.nonSynchronizing);
+    }
+
+    /**
+     * Common helper: parses the header part {size} or {size+}
+     * (tilde ~ is already consumed for binary case)
+     */
+    private static LiteralHeader parseLiteralHeader(Tokenizer t, boolean isBinary) {
+        t.consumeNoSkip('{');
+
+        StringBuilder sizeStr = new StringBuilder();
+        boolean nonSynchronizing = false;
+
+        while (t.hasMore()) {
+            char c = t.peekCharNoSkip();
+            if (Character.isDigit(c)) {
+                sizeStr.append(t.nextCharNoSkip());
+            } else if (c == '+') {
+                nonSynchronizing = true;
+                t.consumeNoSkip('+');
+            } else if (c == '}') {
+                break;
+            } else {
+                break; // malformed
+            }
+        }
+
+        t.consumeNoSkip('}');
+
+        int size = 0;
+        try {
+            if (sizeStr.length() > 0) {
+                size = Integer.parseInt(sizeStr.toString());
+            }
+        } catch (Exception ignored) {}
+
+        return new LiteralHeader(size, nonSynchronizing);
+    }
+
+    // ====================== Other Parsers (unchanged) ======================
+
+    private static ProtocolList parseList(Tokenizer t) {
+        t.consume('(');
+        List<ProtocolObject> elements = new ArrayList<>();
+        while (t.hasMore()) {
+            t.skipWhitespace();
+            if (t.peekChar() == ')') {
+                t.consume(')');
+                break;
+            }
+            elements.add(parseToken(t));
+        }
+        return new ProtocolList(elements.toArray(new ProtocolObject[0]));
+    }
+
+    private static ProtocolSubordinate parseSubordinate(Tokenizer t) {
+        t.consume('[');
+        List<ProtocolObject> elements = new ArrayList<>();
+        while (t.hasMore()) {
+            t.skipWhitespace();
+            if (t.peekChar() == ']') {
+                t.consume(']');
+                break;
+            }
+            elements.add(parseToken(t));
+        }
+        return new ProtocolSubordinate(elements.toArray(new ProtocolObject[0]));
+    }
+
+    private static ProtocolSectionPartial parseSectionPartial(ProtocolAtom baseAtom, Tokenizer t) {
         ProtocolSubordinate section = null;
         Integer offset = null;
         Integer length = null;
@@ -97,62 +200,13 @@ public class ProtocolParser{
         return new PartialData(offset, length);
     }
 
-    // ====================== Parsers ======================
-
-    private static ProtocolList parseList(Tokenizer t) {
-        t.consume('(');
-        List<ProtocolObject> elements = new ArrayList<>();
-        while (t.hasMore()) {
-            t.skipWhitespace();
-            if (t.peekChar() == ')') {
-                t.consume(')');
-                break;
-            }
-            elements.add(parseToken(t));
-        }
-        return new ProtocolList(elements.toArray(new ProtocolObject[0]));
-    }
-
-    private static ProtocolSubordinate parseSubordinate(Tokenizer t) {
-        t.consume('[');
-        List<ProtocolObject> elements = new ArrayList<>();
-        while (t.hasMore()) {
-            t.skipWhitespace();
-            if (t.peekChar() == ']') {
-                t.consume(']');
-                break;
-            }
-            elements.add(parseToken(t));
-        }
-        return new ProtocolSubordinate(elements.toArray(new ProtocolObject[0]));
-    }
-
-    private static ProtocolLiteral parseLiteral(Tokenizer t) {
-        String sizeToken = t.readUntil('}');
-        if (!sizeToken.startsWith("{") || !sizeToken.endsWith("}")) {
-            return new ProtocolLiteral(sizeToken);
-        }
-
-        int size = 0;
-        try {
-            size = Integer.parseInt(sizeToken.substring(1, sizeToken.length() - 1));
-        } catch (Exception ignored) {}
-
-        t.skipCRLF();
-        String data = t.readExactly(size);
-        return new ProtocolLiteral(data);
-    }
-
-    /**
-     * Correct quoted string parser - preserves all whitespace inside quotes
-     */
     private static ProtocolQuoted parseQuoted(Tokenizer t) {
-        t.consumeNoSkip('"');           // consume opening quote without whitespace skip
+        t.consumeNoSkip('"');
 
         StringBuilder sb = new StringBuilder();
         boolean escaped = false;
 
-        while (t.pos < t.input.length()) {   // direct position check to avoid any skip
+        while (t.pos < t.input.length()) {
             char c = t.input.charAt(t.pos++);
             if (escaped) {
                 sb.append(c);
@@ -162,23 +216,13 @@ public class ProtocolParser{
             } else if (c == '"') {
                 break;
             } else {
-                sb.append(c);               // spaces and all characters preserved
+                sb.append(c);
             }
         }
         return new ProtocolQuoted(sb.toString());
     }
 
-    private static class PartialData {
-        final Integer offset;
-        final Integer length;
-
-        PartialData(Integer offset, Integer length) {
-            this.offset = offset != null ? offset : 0;
-            this.length = length;
-        }
-    }
-
-    // ====================== Strict Tokenizer ======================
+    // ====================== Tokenizer (unchanged) ======================
 
     private static class Tokenizer {
         final String input;
@@ -223,19 +267,11 @@ public class ProtocolParser{
             while (pos < input.length()) {
                 char c = input.charAt(pos);
                 if (Character.isWhitespace(c) || c == '(' || c == ')' || c == '[' || c == ']' ||
-                        c == '"' || c == '{' || c == '<' || c == '>') {
+                        c == '"' || c == '{' || c == '}' || c == '<' || c == '>') {
                     break;
                 }
                 pos++;
             }
-            return input.substring(start, pos);
-        }
-
-        public String readUntil(char endChar) {
-            skipWhitespace();
-            int start = pos;
-            while (pos < input.length() && input.charAt(pos) != endChar) pos++;
-            if (pos < input.length()) pos++;
             return input.substring(start, pos);
         }
 
@@ -261,4 +297,25 @@ public class ProtocolParser{
         }
     }
 
+    // ====================== Helper Classes ======================
+
+    private static class LiteralHeader {
+        final int size;
+        final boolean nonSynchronizing;
+
+        LiteralHeader(int size, boolean nonSynchronizing) {
+            this.size = size;
+            this.nonSynchronizing = nonSynchronizing;
+        }
+    }
+
+    private static class PartialData {
+        final Integer offset;
+        final Integer length;
+
+        PartialData(Integer offset, Integer length) {
+            this.offset = offset != null ? offset : 0;
+            this.length = length;
+        }
+    }
 }

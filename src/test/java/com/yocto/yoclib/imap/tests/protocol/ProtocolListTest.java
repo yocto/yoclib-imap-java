@@ -39,7 +39,7 @@ public class ProtocolListTest {
 
         assertEquals("ProtocolList{objects=[ProtocolAtom{value='a'}]}",new ProtocolList(new ProtocolObject[]{a}).toString());
         assertEquals("ProtocolList{objects=[ProtocolAtom{value='a'}, ProtocolQuoted{value='ab'}]}",new ProtocolList(new ProtocolObject[]{a,ab}).toString());
-        assertEquals("ProtocolList{objects=[ProtocolAtom{value='a'}, ProtocolQuoted{value='ab'}, ProtocolLiteral{value='abc'}]}",new ProtocolList(new ProtocolObject[]{a,ab,abc}).toString());
+        assertEquals("ProtocolList{objects=[ProtocolAtom{value='a'}, ProtocolQuoted{value='ab'}, ProtocolLiteral{isNonSynchronizing=false, value='abc'}]}",new ProtocolList(new ProtocolObject[]{a,ab,abc}).toString());
     }
 
 }

@@ -43,7 +43,7 @@ public class ProtocolSubordinateTest {
 
         assertEquals("ProtocolSubordinate{objects=[ProtocolAtom{value='a'}]}",new ProtocolSubordinate(new ProtocolObject[]{a}).toString());
         assertEquals("ProtocolSubordinate{objects=[ProtocolAtom{value='a'}, ProtocolQuoted{value='ab'}]}",new ProtocolSubordinate(new ProtocolObject[]{a,ab}).toString());
-        assertEquals("ProtocolSubordinate{objects=[ProtocolAtom{value='a'}, ProtocolQuoted{value='ab'}, ProtocolLiteral{value='abc'}]}",new ProtocolSubordinate(new ProtocolObject[]{a,ab,abc}).toString());
+        assertEquals("ProtocolSubordinate{objects=[ProtocolAtom{value='a'}, ProtocolQuoted{value='ab'}, ProtocolLiteral{isNonSynchronizing=false, value='abc'}]}",new ProtocolSubordinate(new ProtocolObject[]{a,ab,abc}).toString());
     }
 
 }

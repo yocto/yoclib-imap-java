@@ -10,7 +10,7 @@ public class ProtocolConstants {
 
     public static final String NIL = "NIL";
 
-    public static final char PLUS = ' ';
+    public static final char PLUS = '+';
 
     public static final char SPACE = ' ';
 

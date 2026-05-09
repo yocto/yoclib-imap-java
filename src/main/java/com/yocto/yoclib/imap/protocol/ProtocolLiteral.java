@@ -4,7 +4,7 @@ public class ProtocolLiteral extends ProtocolString {
 
     private final boolean isNonSynchronizing;
 
-    protected ProtocolLiteral(String value,boolean isNonSynchronizing){
+    public ProtocolLiteral(String value,boolean isNonSynchronizing){
         super(value);
         this.isNonSynchronizing = isNonSynchronizing;
         // TODO: Add checks

@@ -1,11 +1,25 @@
 package com.yocto.yoclib.imap.protocol;
 
+import java.util.Objects;
+
 public abstract class ProtocolString extends ProtocolObject {
 
     protected final String value;
 
     protected ProtocolString(String value){
         this.value = value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ProtocolString)) return false;
+        ProtocolString that = (ProtocolString) o;
+        return Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(value);
     }
 
     public String getValue(){

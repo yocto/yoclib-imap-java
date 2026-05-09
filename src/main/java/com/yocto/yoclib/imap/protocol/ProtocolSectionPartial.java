@@ -1,5 +1,7 @@
 package com.yocto.yoclib.imap.protocol;
 
+import java.util.Objects;
+
 public class ProtocolSectionPartial extends ProtocolObject{
 
     private final ProtocolAtom atom;
@@ -54,6 +56,18 @@ public class ProtocolSectionPartial extends ProtocolObject{
 
     public Integer getPartialLength() {
         return this.partialLength;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ProtocolSectionPartial)) return false;
+        ProtocolSectionPartial that = (ProtocolSectionPartial) o;
+        return Objects.equals(atom, that.atom) && Objects.equals(subordinate, that.subordinate) && Objects.equals(partialOffset, that.partialOffset) && Objects.equals(partialLength, that.partialLength);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(atom, subordinate, partialOffset, partialLength);
     }
 
     @Override

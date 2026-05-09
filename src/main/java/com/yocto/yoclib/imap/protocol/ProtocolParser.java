@@ -4,7 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProtocolParser {
+public final class ProtocolParser {
 
     public static ProtocolObject[] parse(String input) {
         if (input == null || input.trim().isEmpty()) {
@@ -29,8 +29,8 @@ public class ProtocolParser {
 
         char c = t.peekCharNoSkip();
 
-        // Binary literal: ~{n} or ~{n+}
-        if (c == '~') {
+        // Binary literal: ~{n} or ~{n+}   ← Only if ~ is immediately followed by {
+        if (c == '~' && t.isNextCharAfter('~', '{')) {
             t.consumeNoSkip('~');
             return parseBinaryLiteral(t);
         }
@@ -44,7 +44,7 @@ public class ProtocolParser {
         if (c == '[') return parseSubordinate(t);
         if (c == '"') return parseQuoted(t);
 
-        // Atom
+        // Atom (includes lone "~", etc.)
         String atomValue = t.readAtom();
         ProtocolAtom atom = new ProtocolAtom(atomValue);
 
@@ -55,36 +55,23 @@ public class ProtocolParser {
         return atom;
     }
 
-    // ====================== Split Literal Parsers ======================
+    // ====================== Literal Parsers ======================
 
-    /**
-     * Parses regular literals: {n} or {n+}
-     */
     private static ProtocolLiteral parseRegularLiteral(Tokenizer t) {
         LiteralHeader header = parseLiteralHeader(t, false);
         t.skipCRLF();
-
         String data = t.readExactly(header.size);
         return new ProtocolLiteral(data, header.nonSynchronizing);
     }
 
-    /**
-     * Parses binary literals: ~{n} or ~{n+}
-     */
     private static ProtocolBinaryLiteral parseBinaryLiteral(Tokenizer t) {
         LiteralHeader header = parseLiteralHeader(t, true);
         t.skipCRLF();
-
         String rawData = t.readExactly(header.size);
         byte[] binaryData = rawData.getBytes(StandardCharsets.ISO_8859_1);
-
         return new ProtocolBinaryLiteral(binaryData, header.nonSynchronizing);
     }
 
-    /**
-     * Common helper: parses the header part {size} or {size+}
-     * (tilde ~ is already consumed for binary case)
-     */
     private static LiteralHeader parseLiteralHeader(Tokenizer t, boolean isBinary) {
         t.consumeNoSkip('{');
 
@@ -101,7 +88,7 @@ public class ProtocolParser {
             } else if (c == '}') {
                 break;
             } else {
-                break; // malformed
+                break;
             }
         }
 
@@ -117,7 +104,7 @@ public class ProtocolParser {
         return new LiteralHeader(size, nonSynchronizing);
     }
 
-    // ====================== Other Parsers (unchanged) ======================
+    // ====================== Other Parsers ======================
 
     private static ProtocolList parseList(Tokenizer t) {
         t.consume('(');
@@ -222,7 +209,7 @@ public class ProtocolParser {
         return new ProtocolQuoted(sb.toString());
     }
 
-    // ====================== Tokenizer (unchanged) ======================
+    // ====================== Tokenizer ======================
 
     private static class Tokenizer {
         final String input;
@@ -259,6 +246,13 @@ public class ProtocolParser {
 
         public boolean isNextCharImmediate(char expected) {
             return pos < input.length() && input.charAt(pos) == expected;
+        }
+
+        public boolean isNextCharAfter(char current, char expected) {
+            if (pos >= input.length() || input.charAt(pos) != current) {
+                return false;
+            }
+            return pos + 1 < input.length() && input.charAt(pos + 1) == expected;
         }
 
         public String readAtom() {

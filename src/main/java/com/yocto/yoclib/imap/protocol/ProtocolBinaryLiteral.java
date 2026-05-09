@@ -1,7 +1,9 @@
 package com.yocto.yoclib.imap.protocol;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.Objects;
 
 public class ProtocolBinaryLiteral extends ProtocolObject {
 
@@ -24,6 +26,18 @@ public class ProtocolBinaryLiteral extends ProtocolObject {
 
     public ProtocolBinaryLiteral(String value){
         this(value.getBytes(StandardCharsets.ISO_8859_1));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ProtocolBinaryLiteral)) return false;
+        ProtocolBinaryLiteral that = (ProtocolBinaryLiteral) o;
+        return isNonSynchronizing == that.isNonSynchronizing && Objects.deepEquals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Arrays.hashCode(value), isNonSynchronizing);
     }
 
     public byte[] getValue(){

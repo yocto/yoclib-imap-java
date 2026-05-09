@@ -2,6 +2,7 @@ package com.yocto.yoclib.imap.tests.protocol;
 
 import com.yocto.yoclib.imap.protocol.ProtocolAtom;
 import com.yocto.yoclib.imap.protocol.ProtocolBinaryLiteral;
+import com.yocto.yoclib.imap.protocol.ProtocolLiteral;
 import com.yocto.yoclib.imap.protocol.ProtocolObject;
 import com.yocto.yoclib.imap.protocol.ProtocolParser;
 
@@ -40,6 +41,29 @@ public class ProtocolParserTest{
 				new ProtocolBinaryLiteral("def",true),
 				new ProtocolAtom("abc"),
 		},ProtocolParser.parse("~{3+}\r\ndef abc\r\n"));
+	}
+
+	@Test
+	public void testParsingLiteral(){
+		assertArrayEquals(new ProtocolObject[]{
+				new ProtocolLiteral(""),
+				new ProtocolAtom("abc"),
+		},ProtocolParser.parse("{0}\r\n abc\r\n"));
+
+		assertArrayEquals(new ProtocolObject[]{
+				new ProtocolLiteral("def"),
+				new ProtocolAtom("abc"),
+		},ProtocolParser.parse("{3}\r\ndef abc\r\n"));
+
+		assertArrayEquals(new ProtocolObject[]{
+				new ProtocolLiteral("",true),
+				new ProtocolAtom("abc"),
+		},ProtocolParser.parse("{0+}\r\n abc\r\n"));
+
+		assertArrayEquals(new ProtocolObject[]{
+				new ProtocolLiteral("def",true),
+				new ProtocolAtom("abc"),
+		},ProtocolParser.parse("{3+}\r\ndef abc\r\n"));
 	}
 
 	@Test

@@ -26,6 +26,9 @@ public class ProtocolBinaryLiteralTest {
 
         assertNotEquals(new ProtocolBinaryLiteral("\u0000ab\u0000"),"\u0000ab\u0000");
         assertNotEquals("\u0000ab\u0000",new ProtocolBinaryLiteral("\u0000ab\u0000"));
+
+        assertNotEquals(new ProtocolBinaryLiteral("\u0000def\u0000"),new ProtocolBinaryLiteral("\u0000abc\u0000"));
+        assertNotEquals(new ProtocolBinaryLiteral("\u0000abc\u0000",true),new ProtocolBinaryLiteral("\u0000abc\u0000"));
     }
 
     @Test

@@ -25,6 +25,9 @@ public class ProtocolLiteralTest {
 
         assertNotEquals(new ProtocolLiteral("ab"),"ab");
         assertNotEquals("ab",new ProtocolLiteral("ab"));
+
+        assertNotEquals(new ProtocolLiteral("def"),new ProtocolLiteral("abc"));
+        assertNotEquals(new ProtocolLiteral("abc",true),new ProtocolLiteral("abc"));
     }
 
     @Test

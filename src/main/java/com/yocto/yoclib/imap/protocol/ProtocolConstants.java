@@ -1,6 +1,6 @@
 package com.yocto.yoclib.imap.protocol;
 
-public class ProtocolConstants {
+public final class ProtocolConstants {
 
     public static final char BACKSLASH = '\\';
 

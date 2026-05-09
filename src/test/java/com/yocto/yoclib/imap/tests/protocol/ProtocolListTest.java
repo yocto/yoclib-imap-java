@@ -31,4 +31,15 @@ public class ProtocolListTest {
         assertEquals("(a \"ab\" {3}\r\nabc)",new ProtocolList(new ProtocolObject[]{a,ab,abc}).toProtocolString());
     }
 
+    @Test
+    public void testToString(){
+        ProtocolAtom a = new ProtocolAtom("a");
+        ProtocolQuoted ab = new ProtocolQuoted("ab");
+        ProtocolLiteral abc = new ProtocolLiteral("abc");
+
+        assertEquals("ProtocolList{objects=[ProtocolAtom{value='a'}]}",new ProtocolList(new ProtocolObject[]{a}).toString());
+        assertEquals("ProtocolList{objects=[ProtocolAtom{value='a'}, ProtocolQuoted{value='ab'}]}",new ProtocolList(new ProtocolObject[]{a,ab}).toString());
+        assertEquals("ProtocolList{objects=[ProtocolAtom{value='a'}, ProtocolQuoted{value='ab'}, ProtocolLiteral{value='abc'}]}",new ProtocolList(new ProtocolObject[]{a,ab,abc}).toString());
+    }
+
 }

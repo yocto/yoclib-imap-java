@@ -22,4 +22,11 @@ public class ProtocolLiteralTest {
         assertEquals("{3}\r\nabc",new ProtocolLiteral("abc").toProtocolString());
     }
 
+    @Test
+    public void testToString(){
+        assertEquals("ProtocolLiteral{value='a'}",new ProtocolLiteral("a").toString());
+        assertEquals("ProtocolLiteral{value='ab'}",new ProtocolLiteral("ab").toString());
+        assertEquals("ProtocolLiteral{value='abc'}",new ProtocolLiteral("abc").toString());
+    }
+
 }

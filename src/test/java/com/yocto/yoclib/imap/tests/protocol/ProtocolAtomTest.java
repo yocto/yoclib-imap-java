@@ -5,6 +5,8 @@ import com.yocto.yoclib.imap.protocol.ProtocolAtom;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ProtocolAtomTest {
 
@@ -16,10 +18,28 @@ public class ProtocolAtomTest {
     }
 
     @Test
+    public void testIsNIL(){
+        assertFalse(new ProtocolAtom("a").isNIL());
+        assertFalse(new ProtocolAtom("ab").isNIL());
+        assertFalse(new ProtocolAtom("abc").isNIL());
+        assertTrue(new ProtocolAtom("NIL").isNIL());
+        assertTrue(new ProtocolAtom("nil").isNIL());
+        assertTrue(new ProtocolAtom("Nil").isNIL());
+        assertTrue(new ProtocolAtom("niL").isNIL());
+    }
+
+    @Test
     public void testToProtocolString(){
         assertEquals("a",new ProtocolAtom("a").toProtocolString());
         assertEquals("ab",new ProtocolAtom("ab").toProtocolString());
         assertEquals("abc",new ProtocolAtom("abc").toProtocolString());
+    }
+
+    @Test
+    public void testToString(){
+        assertEquals("ProtocolAtom{value='a'}",new ProtocolAtom("a").toString());
+        assertEquals("ProtocolAtom{value='ab'}",new ProtocolAtom("ab").toString());
+        assertEquals("ProtocolAtom{value='abc'}",new ProtocolAtom("abc").toString());
     }
 
 }

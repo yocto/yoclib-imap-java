@@ -22,4 +22,11 @@ public class ProtocolQuotedTest {
         assertEquals("\"abc\"",new ProtocolQuoted("abc").toProtocolString());
     }
 
+    @Test
+    public void testToString(){
+        assertEquals("ProtocolQuoted{value='a'}",new ProtocolQuoted("a").toString());
+        assertEquals("ProtocolQuoted{value='ab'}",new ProtocolQuoted("ab").toString());
+        assertEquals("ProtocolQuoted{value='abc'}",new ProtocolQuoted("abc").toString());
+    }
+
 }

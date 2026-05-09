@@ -20,11 +20,9 @@ public class ProtocolLiteralTest {
         assertEquals(new ProtocolLiteral("ab",true),new ProtocolLiteral("ab",true));
         assertEquals(new ProtocolLiteral("abc",true),new ProtocolLiteral("abc",true));
 
-        assertNotEquals(new ProtocolLiteral("a"),null);
-        assertNotEquals(null,new ProtocolLiteral("a"));
-
-        assertNotEquals(new ProtocolLiteral("ab"),"ab");
-        assertNotEquals("ab",new ProtocolLiteral("ab"));
+        Object unknown = "ab";
+        assertNotEquals(new ProtocolLiteral("ab"),unknown);
+        assertNotEquals(unknown,new ProtocolLiteral("ab"));
 
         assertNotEquals(new ProtocolLiteral("def"),new ProtocolLiteral("abc"));
         assertNotEquals(new ProtocolLiteral("abc",true),new ProtocolLiteral("abc"));

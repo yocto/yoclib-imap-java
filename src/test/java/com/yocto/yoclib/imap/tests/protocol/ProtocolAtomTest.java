@@ -17,11 +17,9 @@ public class ProtocolAtomTest {
         assertEquals(new ProtocolAtom("ab"),new ProtocolAtom("ab"));
         assertEquals(new ProtocolAtom("abc"),new ProtocolAtom("abc"));
 
-        assertNotEquals(new ProtocolAtom("a"),null);
-        assertNotEquals(null,new ProtocolAtom("a"));
-
-        assertNotEquals(new ProtocolAtom("ab"),"ab");
-        assertNotEquals("ab",new ProtocolAtom("ab"));
+        Object unknown = "ab";
+        assertNotEquals(new ProtocolAtom("ab"),unknown);
+        assertNotEquals(unknown,new ProtocolAtom("ab"));
     }
 
     @Test

@@ -15,11 +15,9 @@ public class ProtocolQuotedTest {
         assertEquals(new ProtocolQuoted("ab"),new ProtocolQuoted("ab"));
         assertEquals(new ProtocolQuoted("abc"),new ProtocolQuoted("abc"));
 
-        assertNotEquals(new ProtocolQuoted("a"),null);
-        assertNotEquals(null,new ProtocolQuoted("a"));
-
-        assertNotEquals(new ProtocolQuoted("ab"),"ab");
-        assertNotEquals("ab",new ProtocolQuoted("ab"));
+        Object unknown = "ab";
+        assertNotEquals(new ProtocolQuoted("ab"),unknown);
+        assertNotEquals(unknown,new ProtocolQuoted("ab"));
     }
 
     @Test

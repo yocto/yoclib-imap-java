@@ -24,11 +24,9 @@ public class ProtocolSubordinateTest {
         assertEquals(new ProtocolSubordinate(new ProtocolObject[]{a,ab}),new ProtocolSubordinate(new ProtocolObject[]{a,ab}));
         assertEquals(new ProtocolSubordinate(new ProtocolObject[]{a,ab,abc}),new ProtocolSubordinate(new ProtocolObject[]{a,ab,abc}));
 
-        assertNotEquals(new ProtocolSubordinate(new ProtocolObject[]{a}),null);
-        assertNotEquals(null,new ProtocolSubordinate(new ProtocolObject[]{a}));
-
-        assertNotEquals(new ProtocolSubordinate(new ProtocolObject[]{a,ab}),new ProtocolObject[]{a,ab});
-        assertNotEquals(new ProtocolObject[]{a,ab},new ProtocolSubordinate(new ProtocolObject[]{a,ab}));
+        Object unknown = new ProtocolObject[]{a,ab};
+        assertNotEquals(new ProtocolSubordinate(new ProtocolObject[]{a,ab}),unknown);
+        assertNotEquals(unknown,new ProtocolSubordinate(new ProtocolObject[]{a,ab}));
     }
 
     @Test

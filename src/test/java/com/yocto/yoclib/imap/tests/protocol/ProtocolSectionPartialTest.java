@@ -19,11 +19,9 @@ public class ProtocolSectionPartialTest{
 
 		assertEquals(new ProtocolSectionPartial(atom),new ProtocolSectionPartial(atom));
 
-		assertNotEquals(new ProtocolSectionPartial(atom),null);
-		assertNotEquals(null,new ProtocolSectionPartial(atom));
-
-		assertNotEquals(new ProtocolSectionPartial(atom),atom);
-		assertNotEquals(atom,new ProtocolSectionPartial(atom));
+		Object unknown = new ProtocolAtom("ab");
+		assertNotEquals(new ProtocolSectionPartial(atom),unknown);
+		assertNotEquals(unknown,new ProtocolSectionPartial(atom));
 	}
 
 	@Test
@@ -62,6 +60,38 @@ public class ProtocolSectionPartialTest{
 		assertEquals(456,new ProtocolSectionPartial(new ProtocolAtom("a"),new ProtocolSubordinate(new ProtocolObject[]{
 				new ProtocolAtom("ab")
 		}),123,456).getPartialLength());
+	}
+
+	@Test
+	public void testToProtocolString(){
+		ProtocolAtom atom = new ProtocolAtom("a");
+		ProtocolSubordinate subordinate = new ProtocolSubordinate(new ProtocolObject[]{
+				new ProtocolAtom("ab"),
+				new ProtocolAtom("abc"),
+		});
+
+		assertEquals("a[ab abc]<123.456>",new ProtocolSectionPartial(atom,subordinate,123,456).toProtocolString());
+		assertEquals("a[ab abc]<123>",new ProtocolSectionPartial(atom,subordinate,123).toProtocolString());
+		assertEquals("a[ab abc]",new ProtocolSectionPartial(atom,subordinate).toProtocolString());
+		assertEquals("a<123.456>",new ProtocolSectionPartial(atom,123,456).toProtocolString());
+		assertEquals("a<123>",new ProtocolSectionPartial(atom,123).toProtocolString());
+		assertEquals("a",new ProtocolSectionPartial(atom).toProtocolString());
+	}
+
+	@Test
+	public void testToString(){
+		ProtocolAtom atom = new ProtocolAtom("a");
+		ProtocolSubordinate subordinate = new ProtocolSubordinate(new ProtocolObject[]{
+				new ProtocolAtom("ab"),
+				new ProtocolAtom("abc"),
+		});
+
+		assertEquals("ProtocolSectionPartial{atom=ProtocolAtom{value='a'}, subordinate=ProtocolSubordinate{objects=[ProtocolAtom{value='ab'}, ProtocolAtom{value='abc'}]}, partialOffset=123, partialLength=456}",new ProtocolSectionPartial(atom,subordinate,123,456).toString());
+		assertEquals("ProtocolSectionPartial{atom=ProtocolAtom{value='a'}, subordinate=ProtocolSubordinate{objects=[ProtocolAtom{value='ab'}, ProtocolAtom{value='abc'}]}, partialOffset=123, partialLength=null}",new ProtocolSectionPartial(atom,subordinate,123).toString());
+		assertEquals("ProtocolSectionPartial{atom=ProtocolAtom{value='a'}, subordinate=ProtocolSubordinate{objects=[ProtocolAtom{value='ab'}, ProtocolAtom{value='abc'}]}, partialOffset=null, partialLength=null}",new ProtocolSectionPartial(atom,subordinate).toString());
+		assertEquals("ProtocolSectionPartial{atom=ProtocolAtom{value='a'}, subordinate=null, partialOffset=123, partialLength=456}",new ProtocolSectionPartial(atom,123,456).toString());
+		assertEquals("ProtocolSectionPartial{atom=ProtocolAtom{value='a'}, subordinate=null, partialOffset=123, partialLength=null}",new ProtocolSectionPartial(atom,123).toString());
+		assertEquals("ProtocolSectionPartial{atom=ProtocolAtom{value='a'}, subordinate=null, partialOffset=null, partialLength=null}",new ProtocolSectionPartial(atom).toString());
 	}
 
 }

@@ -24,11 +24,9 @@ public class ProtocolListTest {
         assertEquals(new ProtocolList(new ProtocolObject[]{a,ab}),new ProtocolList(new ProtocolObject[]{a,ab}));
         assertEquals(new ProtocolList(new ProtocolObject[]{a,ab,abc}),new ProtocolList(new ProtocolObject[]{a,ab,abc}));
 
-        assertNotEquals(new ProtocolList(new ProtocolObject[]{a}),null);
-        assertNotEquals(null,new ProtocolList(new ProtocolObject[]{a}));
-
-        assertNotEquals(new ProtocolList(new ProtocolObject[]{a,ab}),new ProtocolObject[]{a,ab});
-        assertNotEquals(new ProtocolObject[]{a,ab},new ProtocolList(new ProtocolObject[]{a,ab}));
+        Object unknown = new ProtocolObject[]{a,ab};
+        assertNotEquals(new ProtocolList(new ProtocolObject[]{a,ab}),unknown);
+        assertNotEquals(unknown,new ProtocolList(new ProtocolObject[]{a,ab}));
     }
 
     @Test

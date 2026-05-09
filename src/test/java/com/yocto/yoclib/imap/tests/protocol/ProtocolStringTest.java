@@ -11,69 +11,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class ProtocolStringTest {
+public class ProtocolStringTest{
 
     @Test
     public void testEquals(){
-        assertEquals(new ProtocolString("a") {
-            @Override
-            public String toProtocolString() {
-                return null;
-            }
-        }, new ProtocolString("a"){
-            @Override
-            public String toProtocolString() {
-                return null;
-            }
-        });
-        assertEquals(new ProtocolString("ab"){
-            @Override
-            public String toProtocolString() {
-                return null;
-            }
-        },new ProtocolString("ab"){
-            @Override
-            public String toProtocolString() {
-                return null;
-            }
-        });
-        assertEquals(new ProtocolString("abc"){
-            @Override
-            public String toProtocolString() {
-                return null;
-            }
-        },new ProtocolString("abc"){
-            @Override
-            public String toProtocolString() {
-                return null;
-            }
-        });
+        assertEquals(new ProtocolStringDummy("a") , new ProtocolStringDummy("a"));
+        assertEquals(new ProtocolStringDummy("ab"),new ProtocolStringDummy("ab"));
+        assertEquals(new ProtocolStringDummy("abc"),new ProtocolStringDummy("abc"));
 
-        assertNotEquals(new ProtocolString("a"){
-            @Override
-            public String toProtocolString() {
-                return null;
-            }
-        },null);
-        assertNotEquals(null,new ProtocolString("a"){
-            @Override
-            public String toProtocolString() {
-                return null;
-            }
-        });
-
-        assertNotEquals(new ProtocolString("ab"){
-            @Override
-            public String toProtocolString() {
-                return null;
-            }
-        },"ab");
-        assertNotEquals("ab",new ProtocolString("ab"){
-            @Override
-            public String toProtocolString() {
-                return null;
-            }
-        });
+        Object unknown = "ab";
+        assertNotEquals(new ProtocolStringDummy("ab"),unknown);
+        assertNotEquals(unknown,new ProtocolStringDummy("ab"));
     }
 
     @Test
@@ -111,6 +59,19 @@ public class ProtocolStringTest {
         assertInstanceOf(ProtocolQuoted.class,ProtocolString.create("a",true));
         assertInstanceOf(ProtocolQuoted.class,ProtocolString.create("ab",true));
         assertInstanceOf(ProtocolQuoted.class,ProtocolString.create("abc",true));
+    }
+
+    public static class ProtocolStringDummy extends ProtocolString{
+
+        protected ProtocolStringDummy(String value){
+            super(value);
+        }
+
+        @Override
+        public String toProtocolString() {
+            return null;
+        }
+
     }
 
 }

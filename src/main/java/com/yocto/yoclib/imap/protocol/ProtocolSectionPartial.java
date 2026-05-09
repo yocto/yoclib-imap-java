@@ -62,12 +62,7 @@ public class ProtocolSectionPartial extends ProtocolObject{
     public boolean equals(Object o) {
         if (!(o instanceof ProtocolSectionPartial)) return false;
         ProtocolSectionPartial that = (ProtocolSectionPartial) o;
-        return Objects.equals(atom, that.atom) && Objects.equals(subordinate, that.subordinate) && Objects.equals(partialOffset, that.partialOffset) && Objects.equals(partialLength, that.partialLength);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(atom, subordinate, partialOffset, partialLength);
+        return Objects.equals(this.atom, that.atom) && Objects.equals(this.subordinate, that.subordinate) && Objects.equals(this.partialOffset, that.partialOffset) && Objects.equals(this.partialLength, that.partialLength);
     }
 
     @Override

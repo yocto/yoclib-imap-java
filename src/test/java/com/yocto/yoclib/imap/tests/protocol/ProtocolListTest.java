@@ -1,6 +1,10 @@
 package com.yocto.yoclib.imap.tests.protocol;
 
-import com.yocto.yoclib.imap.protocol.*;
+import com.yocto.yoclib.imap.protocol.ProtocolAtom;
+import com.yocto.yoclib.imap.protocol.ProtocolList;
+import com.yocto.yoclib.imap.protocol.ProtocolLiteral;
+import com.yocto.yoclib.imap.protocol.ProtocolObject;
+import com.yocto.yoclib.imap.protocol.ProtocolQuoted;
 
 import org.junit.jupiter.api.Test;
 

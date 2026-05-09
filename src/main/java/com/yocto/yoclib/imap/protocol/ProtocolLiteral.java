@@ -1,7 +1,5 @@
 package com.yocto.yoclib.imap.protocol;
 
-import java.util.Objects;
-
 public class ProtocolLiteral extends ProtocolString {
 
     private final boolean isNonSynchronizing;
@@ -21,12 +19,7 @@ public class ProtocolLiteral extends ProtocolString {
         if (!(o instanceof ProtocolLiteral)) return false;
         if (!super.equals(o)) return false;
         ProtocolLiteral that = (ProtocolLiteral) o;
-        return isNonSynchronizing == that.isNonSynchronizing;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), isNonSynchronizing);
+        return this.isNonSynchronizing == that.isNonSynchronizing;
     }
 
     public boolean isNonSynchronizing(){

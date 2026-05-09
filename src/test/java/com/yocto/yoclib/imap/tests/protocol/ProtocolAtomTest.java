@@ -6,9 +6,23 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ProtocolAtomTest {
+
+    @Test
+    public void testEquals(){
+        assertEquals(new ProtocolAtom("a"),new ProtocolAtom("a"));
+        assertEquals(new ProtocolAtom("ab"),new ProtocolAtom("ab"));
+        assertEquals(new ProtocolAtom("abc"),new ProtocolAtom("abc"));
+
+        assertNotEquals(new ProtocolAtom("a"),null);
+        assertNotEquals(null,new ProtocolAtom("a"));
+
+        assertNotEquals(new ProtocolAtom("ab"),"ab");
+        assertNotEquals("ab",new ProtocolAtom("ab"));
+    }
 
     @Test
     public void testGetValue(){

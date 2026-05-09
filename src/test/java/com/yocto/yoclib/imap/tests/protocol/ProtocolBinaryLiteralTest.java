@@ -1,7 +1,6 @@
 package com.yocto.yoclib.imap.tests.protocol;
 
 import com.yocto.yoclib.imap.protocol.ProtocolBinaryLiteral;
-import com.yocto.yoclib.imap.protocol.ProtocolLiteral;
 
 import org.junit.jupiter.api.Test;
 

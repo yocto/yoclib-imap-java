@@ -1,8 +1,6 @@
 package com.yocto.yoclib.imap.protocol;
 
 import java.util.Arrays;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class ProtocolList extends ProtocolObject {
 
@@ -16,12 +14,7 @@ public class ProtocolList extends ProtocolObject {
     public boolean equals(Object o) {
         if (!(o instanceof ProtocolList)) return false;
         ProtocolList that = (ProtocolList) o;
-        return Objects.deepEquals(objects, that.objects);
-    }
-
-    @Override
-    public int hashCode() {
-        return Arrays.hashCode(objects);
+        return Arrays.deepEquals(this.objects, that.objects);
     }
 
     public ProtocolObject[] getObjects() {

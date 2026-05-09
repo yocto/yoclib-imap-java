@@ -14,12 +14,7 @@ public abstract class ProtocolString extends ProtocolObject {
     public boolean equals(Object o) {
         if (!(o instanceof ProtocolString)) return false;
         ProtocolString that = (ProtocolString) o;
-        return Objects.equals(value, that.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(value);
+        return Objects.equals(this.value, that.value);
     }
 
     public String getValue(){

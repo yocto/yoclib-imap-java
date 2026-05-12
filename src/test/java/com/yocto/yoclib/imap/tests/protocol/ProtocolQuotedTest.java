@@ -14,6 +14,7 @@ public class ProtocolQuotedTest {
         assertEquals(new ProtocolQuoted("a"),new ProtocolQuoted("a"));
         assertEquals(new ProtocolQuoted("ab"),new ProtocolQuoted("ab"));
         assertEquals(new ProtocolQuoted("abc"),new ProtocolQuoted("abc"));
+        assertEquals(new ProtocolQuoted("ab cd"),new ProtocolQuoted("ab cd"));
 
         Object unknown = "ab";
         assertNotEquals(new ProtocolQuoted("ab"),unknown);
@@ -25,6 +26,7 @@ public class ProtocolQuotedTest {
         assertEquals("a",new ProtocolQuoted("a").getValue());
         assertEquals("ab",new ProtocolQuoted("ab").getValue());
         assertEquals("abc",new ProtocolQuoted("abc").getValue());
+        assertEquals("ab cd",new ProtocolQuoted("ab cd").getValue());
     }
 
     @Test
@@ -32,6 +34,7 @@ public class ProtocolQuotedTest {
         assertEquals("\"a\"",new ProtocolQuoted("a").toProtocolString());
         assertEquals("\"ab\"",new ProtocolQuoted("ab").toProtocolString());
         assertEquals("\"abc\"",new ProtocolQuoted("abc").toProtocolString());
+        assertEquals("\"ab cd\"",new ProtocolQuoted("ab cd").toProtocolString());
     }
 
     @Test
@@ -39,6 +42,7 @@ public class ProtocolQuotedTest {
         assertEquals("ProtocolQuoted{value='a'}",new ProtocolQuoted("a").toString());
         assertEquals("ProtocolQuoted{value='ab'}",new ProtocolQuoted("ab").toString());
         assertEquals("ProtocolQuoted{value='abc'}",new ProtocolQuoted("abc").toString());
+        assertEquals("ProtocolQuoted{value='ab cd'}",new ProtocolQuoted("ab cd").toString());
     }
 
 }

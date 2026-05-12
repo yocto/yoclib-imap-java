@@ -193,7 +193,7 @@ public final class ProtocolParser {
         StringBuilder sb = new StringBuilder();
         boolean escaped = false;
 
-        while (t.hasMore()) {
+        while (t.pos < t.input.length) {
             byte b = t.nextByteNoSkip();
             char c = (char) b;
 

@@ -6,11 +6,35 @@ import com.yocto.yoclib.imap.protocol.ProtocolLiteral;
 import com.yocto.yoclib.imap.protocol.ProtocolObject;
 import com.yocto.yoclib.imap.protocol.ProtocolParser;
 
+import com.yocto.yoclib.imap.protocol.ProtocolQuoted;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 public class ProtocolParserTest{
+
+	@Test
+	public void testParsingQuoted(){
+		assertArrayEquals(new ProtocolObject[]{
+				new ProtocolQuoted(""),
+				new ProtocolAtom("abc"),
+		},ProtocolParser.parse("\"\" abc\r\n".getBytes()));
+
+		assertArrayEquals(new ProtocolObject[]{
+				new ProtocolQuoted("def"),
+				new ProtocolAtom("abc"),
+		},ProtocolParser.parse("\"def\" abc\r\n".getBytes()));
+
+		assertArrayEquals(new ProtocolObject[]{
+				new ProtocolQuoted(""),
+				new ProtocolAtom("abc"),
+		},ProtocolParser.parse("\"\" abc\r\n".getBytes()));
+
+		assertArrayEquals(new ProtocolObject[]{
+				new ProtocolQuoted("def ghi"),
+				new ProtocolAtom("abc"),
+		},ProtocolParser.parse("\"def ghi\" abc\r\n".getBytes()));
+	}
 
 	@Test
 	public void testParsingBinaryLiteral(){
